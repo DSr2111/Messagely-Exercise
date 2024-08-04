@@ -19,6 +19,8 @@ router.post("/login", async function (req, res, next) {
       let token = jwt.sign({ username }, SECRET_KEY);
       User.updateLoginTimestamp(username);
       return res.json({ token });
+    } else {
+      throw new ExpressError("Invalid username/password", 400);
     }
   } catch (err) {
     return next(err);
