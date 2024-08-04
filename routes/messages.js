@@ -1,4 +1,5 @@
 const Router = require("express").Router;
+const router = new Router();
 const Message = require("../models/message");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 
@@ -15,6 +16,11 @@ const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
  *
  **/
 
+router.get("/:id", ensureLoggedIn, async function (req, res, next) {
+  try {
+    
+  } catch (err) {}
+});
 /** POST / - post message.
  *
  * {to_username, body} =>
