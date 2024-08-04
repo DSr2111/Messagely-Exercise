@@ -2,6 +2,7 @@ const Router = require("express").Router;
 const router = new Router();
 const Message = require("../models/message");
 const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
+const ExpressError = require("../expressError");
 
 /** GET /:id - get detail of message.
  *
@@ -18,8 +19,19 @@ const { ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
 
 router.get("/:id", ensureLoggedIn, async function (req, res, next) {
   try {
-    
-  } catch (err) {}
+    const message = await Message.get(req.params.id);
+
+    if (
+      req.user.username !== message.from_user.username ||
+      req.user.username !== message.to_user.username
+    ) {
+      throw new ExpressError("Unauthorized", 401);
+    }
+
+    return res.json({ message });
+  } catch (err) {
+    return next(err);
+  }
 });
 /** POST / - post message.
  *
