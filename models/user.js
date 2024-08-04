@@ -93,6 +93,10 @@ class User {
       WHERE username = $1`,
       [username]
     );
+
+    if (!result.rows[0]) {
+      throw new ExpressError(`No such user: ${username}`);
+    }
   }
 
   /** Return messages from this user.
