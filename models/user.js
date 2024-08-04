@@ -1,8 +1,5 @@
 /** User class for message.ly */
 
-const Router = require("express").Router;
-const User = require("../models/user");
-
 /** User of the site. */
 
 class User {
