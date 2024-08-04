@@ -34,6 +34,13 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
+/** POST / - post message.
+ *
+ * {to_username, body} =>
+ *   {message: {id, from_username, to_username, body, sent_at}}
+ *
+ **/
+
 router.post("/", ensureLoggedIn, async function (req, res, next) {
   try {
     const { to_username, body } = req.body;
@@ -45,13 +52,6 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
-/** POST / - post message.
- *
- * {to_username, body} =>
- *   {message: {id, from_username, to_username, body, sent_at}}
- *
- **/
-
 /** POST/:id/read - mark message as read:
  *
  *  => {message: {id, read_at}}
@@ -59,3 +59,19 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  * Make sure that the only the intended recipient can mark as read.
  *
  **/
+
+router.post("/:id/read", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const message = await Message.get(req.params.id);
+    if (req.user.username !== message.to_user.username) {
+      throw new ExpressError("Unauthorized", 401);
+    }
+
+    const updatedMessage = await Message.markRead(req.params.id);
+    return res.json({ message: updatedMessage });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+module.exports = router;
