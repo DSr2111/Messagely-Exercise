@@ -52,6 +52,10 @@ class User {
       RETURNING username`,
       [username]
     );
+
+    if (!result.rows[0]) {
+      throw new ExpressError(`No such user: ${username}`, 404);
+    }
   }
 
   /** All: basic info on all users:
