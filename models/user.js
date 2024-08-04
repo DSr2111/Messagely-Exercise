@@ -34,6 +34,16 @@ class User {
 
   static async authenticate(username, password) {
     const result = await db.query(
+      "SELECT password FROM users WHERE username = $1",
+      [username]
+    );
+    let user = result.rows[0];
+  }
+
+  /** Update last_login_at for user */
+
+  static async updateLoginTimestamp(username) {
+    const result = await db.query(
       `UPDATE users
       SET last_login_at = current_timestamp
       WHERE username = $1
@@ -41,10 +51,6 @@ class User {
       [username]
     );
   }
-
-  /** Update last_login_at for user */
-
-  static async updateLoginTimestamp(username) {}
 
   /** All: basic info on all users:
    * [{username, first_name, last_name, phone}, ...] */
