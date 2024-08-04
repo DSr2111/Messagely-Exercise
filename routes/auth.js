@@ -33,3 +33,14 @@ router.post("/login", async function (req, res, next) {
  *
  *  Make sure to update their last-login!
  */
+
+router.post("/register", async function (req, res, next) {
+  try {
+    let { username } = await User.register(req.body);
+    let token = jwt.sign({ username }, SECRET_KEY);
+    User.updateLoginTimestamp(username);
+    return res.json({ token });
+  } catch (err) {
+    return next(err);
+  }
+});
