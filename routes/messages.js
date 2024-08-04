@@ -33,6 +33,18 @@ router.get("/:id", ensureLoggedIn, async function (req, res, next) {
     return next(err);
   }
 });
+
+router.post("/", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const { to_username, body } = req.body;
+    const from_username = req.user.username;
+    const message = await Message.create({ from_username, to_username, body });
+    return res.json({ message });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** POST / - post message.
  *
  * {to_username, body} =>
