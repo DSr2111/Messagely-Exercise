@@ -122,7 +122,18 @@ class User {
       [username]
     );
 
-    return result.rows;
+    return result.rows.map((m) => ({
+      id: m.id,
+      to_user: {
+        username: username.to_username,
+        first_name: m.first_name,
+        last_name: m.last_name,
+        phone: m_phone,
+      },
+      body: m.body,
+      sent_at: m.sent_at,
+      read_at: m.read_at,
+    }));
   }
 
   /** Return messages to this user.
